@@ -1,0 +1,100 @@
+[gd_scene load_steps=8 format=3 uid="uid://dli2clj2a884g"]
+
+[ext_resource type="Texture2D" uid="uid://cywahdwg3oyjm" path="res://Character/Character/Robot.png" id="1_qm4dl"]
+
+[sub_resource type="GDScript" id="GDScript_q8bps"]
+script/source = "extends CharacterBody2D
+
+# Exported variables for customization
+@export var speed: float = 300.0
+
+# Reference to the animated sprite
+@onready var anim = get_node(\"AnimatedSprite2D\")
+
+# Get the gravity from the project settings to sync with RigidBody nodes
+var gravity = ProjectSettings.get_setting(\"physics/2d/default_gravity\")
+var animation_locked: bool = false
+var direction : Vector2 = Vector2.ZERO
+
+func _ready():
+	anim.play(\"Idle\")
+
+func _physics_process(delta):
+	# Add gravity
+	if not is_on_floor():
+		velocity.y += gravity * delta
+
+	# Get input direction (left/right) and handle movement/deceleration
+	# Replace UI actions with custom gameplay actions
+	var direction = Input.get_vector(\"left\", \"right\", \"up\", \"down\")
+
+	if direction:
+		velocity.x = direction.x * speed
+		anim.play(\"Run\")
+	else:
+		anim.play(\"Idle\")
+		velocity.x = move_toward(velocity.x, 0, speed)
+
+	move_and_slide()
+	
+	if direction.x > 0:
+		anim.flip_h = false
+	elif direction.x < 0:
+		anim.flip_h = true
+
+
+"
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_iq6bp"]
+atlas = ExtResource("1_qm4dl")
+region = Rect2(0, 0, 64, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pxyv8"]
+atlas = ExtResource("1_qm4dl")
+region = Rect2(0, 0, 64, 128)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_dihmg"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_iq6bp")
+}],
+"loop": true,
+"name": &"Idle",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pxyv8")
+}],
+"loop": true,
+"name": &"Run",
+"speed": 10.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_764dn"]
+size = Vector2(32.0408, 45.2447)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_lmf2b"]
+radius = 26.1725
+
+[node name="Player" type="CharacterBody2D"]
+script = SubResource("GDScript_q8bps")
+speed = 100.0
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_dihmg")
+animation = &"Run"
+autoplay = "Idle"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(4.5, 9)
+scale = Vector2(1.27962, 2.29861)
+shape = SubResource("RectangleShape2D_764dn")
+
+[node name="ActionFinder" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 16
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ActionFinder"]
+shape = SubResource("CircleShape2D_lmf2b")
