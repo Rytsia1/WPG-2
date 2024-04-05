@@ -1,0 +1,31 @@
+[gd_scene load_steps=6 format=3 uid="uid://c1x34ew0823gb"]
+
+[ext_resource type="Script" path="res://test_guy.gd" id="1_gyvc3"]
+[ext_resource type="Texture2D" uid="uid://rwemj1ljfa66" path="res://REvisi/Profesor(4).png" id="2_m1e5d"]
+[ext_resource type="PackedScene" uid="uid://cye1su0ng4ply" path="res://Interaction/Interaction Area/interaction_area.tscn" id="3_y2u77"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_x7lhy"]
+radius = 32.0
+height = 114.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_aklrl"]
+radius = 68.2642
+
+[node name="CharacterBody2D" type="CharacterBody2D"]
+collision_layer = 2
+script = ExtResource("1_gyvc3")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_m1e5d")
+flip_h = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(-5, 7)
+shape = SubResource("CapsuleShape2D_x7lhy")
+
+[node name="InteractionArea" parent="." instance=ExtResource("3_y2u77")]
+action_name = "talk"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="InteractionArea"]
+position = Vector2(-5, 3)
+shape = SubResource("CircleShape2D_aklrl")

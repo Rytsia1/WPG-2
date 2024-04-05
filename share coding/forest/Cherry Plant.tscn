@@ -1,0 +1,46 @@
+[gd_scene load_steps=8 format=3 uid="uid://10rw5dlkypt0"]
+
+[ext_resource type="Script" path="res://Test-seed.gd" id="1_lqkfr"]
+[ext_resource type="Texture2D" uid="uid://cv7q8q4ovr8ch" path="res://SEED.png" id="2_bfkau"]
+[ext_resource type="PackedScene" uid="uid://cye1su0ng4ply" path="res://Interaction/Interaction Area/interaction_area.tscn" id="3_6g8m6"]
+[ext_resource type="Texture2D" uid="uid://diid5ykqpedhc" path="res://SEEDflip.png" id="3_veuxe"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_ykgf7"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_bfkau")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_veuxe")
+}],
+"loop": true,
+"name": &"new_animation",
+"speed": 5.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_6huvm"]
+radius = 553.995
+height = 1600.54
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_8g6d7"]
+radius = 821.112
+
+[node name="StaticBody2D" type="StaticBody2D"]
+scale = Vector2(0.31, 0.31)
+collision_layer = 2
+script = ExtResource("1_lqkfr")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_ykgf7")
+animation = &"new_animation"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(-1, -1.5)
+shape = SubResource("CapsuleShape2D_6huvm")
+
+[node name="InteractionArea" parent="." instance=ExtResource("3_6g8m6")]
+action_name = "plant"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="InteractionArea"]
+shape = SubResource("CircleShape2D_8g6d7")
